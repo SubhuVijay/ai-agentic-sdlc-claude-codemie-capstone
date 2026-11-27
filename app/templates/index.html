@@ -26,10 +26,12 @@
                 </span>
             </td>
             <td>
-                <a class="{{ 'btn btn-success' if entry.status else 'btn btn-dark'}}"
-                   href="/turn/{{ entry.id }}">
-                    Turn Status
-                </a>
+                <form class="d-inline" action="{{ url_for('toggle_entry', id=entry.id) }}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="{{ 'btn btn-success' if entry.status else 'btn btn-dark'}}" type="submit">
+                        Turn Status
+                    </button>
+                </form>
                 <a class="btn btn-danger"
                    href="/delete/{{ entry.id }}">
                     Delete

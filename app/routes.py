@@ -97,16 +97,17 @@ def delete(id):
 
     return "of the jedi"
 
+@app.route('/entries/<int:id>/toggle', methods=['POST'])
+def toggle_entry(id):
+    entry = Entry.query.get_or_404(id)
+    entry.status = not entry.status
+    db.session.commit()
+    flash('Entry marked as done.' if entry.status else 'Entry marked as not done.', 'success')
+    return redirect(url_for('index'))
+
 @app.route('/turn/<int:id>')
 def turn(id):
-    if not id or id != 0:
-        entry = Entry.query.get(id)
-        if entry:
-            entry.status = not entry.status
-            db.session.commit()
-        return redirect('/')
-
-    return "of the jedi"
+    return redirect(url_for('index'))
 
 # @app.errorhandler(Exception)
 # def error_page(e):
