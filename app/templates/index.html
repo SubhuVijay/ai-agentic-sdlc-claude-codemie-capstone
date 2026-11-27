@@ -35,7 +35,7 @@
                     Delete
                 </a>
                 <a class="btn btn-info"
-                   href="/update/{{ entry.id }}">
+                   href="{{ url_for('edit_entry', id=entry.id) }}">
                     Edit
                 </a>
             </td>

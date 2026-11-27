@@ -52,29 +52,37 @@ def create_entry():
 def add():
     return redirect(url_for('create_entry'), code=307)
 
+@app.route('/entries/<int:id>/edit')
+def edit_entry(id):
+    entry = Entry.query.get_or_404(id)
+    return render_template('entry_form.html', heading='Edit entry', submit_label='Update',
+                           form_action=url_for('update_entry', id=entry.id),
+                           values={'title': entry.title, 'description': entry.description}, errors={})
+
+@app.route('/entries/<int:id>', methods=['POST'])
+def update_entry(id):
+    entry = Entry.query.get_or_404(id)
+    values, errors = read_entry_form(request.form)
+    if errors:
+        return render_template('entry_form.html', heading='Edit entry', submit_label='Update',
+                               form_action=url_for('update_entry', id=entry.id), values=values, errors=errors)
+    entry.title = values['title']
+    entry.description = values['description']
+    db.session.commit()
+    flash('Entry updated.', 'success')
+    return redirect(url_for('index'))
+
 @app.route('/update/<int:id>')
 def updateRoute(id):
-    if not id or id != 0:
-        entry = Entry.query.get(id)
-        if entry:
-            return render_template('update.html', entry=entry)
-
-    return "of the jedi"
+    return redirect(url_for('edit_entry', id=id))
 
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
-    if not id or id != 0:
-        entry = Entry.query.get(id)
-        if entry:
-            form = request.form
-            title = form.get('title')
-            description = form.get('description')
-            entry.title = title
-            entry.description = description
-            db.session.commit()
-        return redirect('/')
+    return redirect(url_for('update_entry', id=id), code=307)
 
-    return "of the jedi"
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('errors/404.html'), 404
 
 
 
