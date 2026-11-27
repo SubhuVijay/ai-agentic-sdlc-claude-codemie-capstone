@@ -2,8 +2,6 @@ from flask import render_template, request, redirect, url_for, flash
 from app import app, db
 from app.models import Entry
 
-jedi = "of the jedi"
-
 TITLE_MAX = 64
 DESCRIPTION_MAX = 120
 
@@ -80,12 +78,6 @@ def updateRoute(id):
 def update(id):
     return redirect(url_for('update_entry', id=id), code=307)
 
-@app.errorhandler(404)
-def not_found(e):
-    return render_template('errors/404.html'), 404
-
-
-
 @app.route('/entries/<int:id>/delete')
 def confirm_delete_entry(id):
     entry = Entry.query.get_or_404(id)
@@ -115,6 +107,11 @@ def toggle_entry(id):
 def turn(id):
     return redirect(url_for('index'))
 
-# @app.errorhandler(Exception)
-# def error_page(e):
-#     return "of the jedi"
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('errors/404.html'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    db.session.rollback()
+    return render_template('errors/500.html'), 500
