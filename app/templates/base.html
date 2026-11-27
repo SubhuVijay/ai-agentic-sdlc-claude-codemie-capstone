@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Entries{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
           crossorigin="anonymous">
@@ -11,11 +12,17 @@
 
 {% include "header.html" %}
 
-    <hr>
+<div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category if category in ['success', 'info', 'warning', 'danger'] else 'info' }}" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endwith %}
+</div>
 
-    {% block content %}{% endblock %}
+{% block content %}{% endblock %}
 
-    <hr>
+<hr>
 
 {% include "footer.html" %}
 
