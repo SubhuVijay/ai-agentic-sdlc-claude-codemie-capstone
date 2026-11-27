@@ -46,7 +46,7 @@
     {% else %}
     <div class="text-center text-muted py-5" id="empty-state">
         <p class="lead">No entries yet.</p>
-        <a class="btn btn-primary" href="/entries/new">Create your first entry</a>
+        <a class="btn btn-primary" href="{{ url_for('new_entry') }}">Create your first entry</a>
     </div>
     {% endif %}
 </div>
