@@ -1,1 +1,54 @@
-{% include "content.html" %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    {% if entries %}
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Operations</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entry in entries %}
+        <tr>
+            <td>{{ entry.id }}</td>
+            <td><strong>{{ entry.title }}</strong></td>
+            <td>{{ entry.description }}</td>
+            <td>
+                <span class="badge {{ 'badge-success' if entry.status else 'badge-secondary' }}">
+                    {{ 'Done' if entry.status else 'Not done' }}
+                </span>
+            </td>
+            <td>
+                <a class="{{ 'btn btn-success' if entry.status else 'btn btn-dark'}}"
+                   href="/turn/{{ entry.id }}">
+                    Turn Status
+                </a>
+                <a class="btn btn-danger"
+                   href="/delete/{{ entry.id }}">
+                    Delete
+                </a>
+                <a class="btn btn-info"
+                   href="/update/{{ entry.id }}">
+                    Edit
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center text-muted py-5" id="empty-state">
+        <p class="lead">No entries yet.</p>
+        <a class="btn btn-primary" href="/entries/new">Create your first entry</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

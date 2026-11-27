@@ -1,28 +1,17 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 from app import app, db
 from app.models import Entry
 
 jedi = "of the jedi"
 
 @app.route('/')
-@app.route('/index')
 def index():
-    # entries = [
-    #     {
-    #         'id' : 1,
-    #         'title': 'test title 1',
-    #         'description' : 'test desc 1',
-    #         'status' : True
-    #     },
-    #     {
-    #         'id': 2,
-    #         'title': 'test title 2',
-    #         'description': 'test desc 2',
-    #         'status': False
-    #     }
-    # ]
-    entries = Entry.query.all()
+    entries = Entry.query.order_by(Entry.id).all()
     return render_template('index.html', entries=entries)
+
+@app.route('/index')
+def index_alias():
+    return redirect(url_for('index'))
 
 @app.route('/add', methods=['POST'])
 def add():
