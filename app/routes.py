@@ -86,16 +86,22 @@ def not_found(e):
 
 
 
+@app.route('/entries/<int:id>/delete')
+def confirm_delete_entry(id):
+    entry = Entry.query.get_or_404(id)
+    return render_template('entry_delete_confirm.html', entry=entry)
+
+@app.route('/entries/<int:id>/delete', methods=['POST'])
+def delete_entry(id):
+    entry = Entry.query.get_or_404(id)
+    db.session.delete(entry)
+    db.session.commit()
+    flash('Entry deleted.', 'success')
+    return redirect(url_for('index'))
+
 @app.route('/delete/<int:id>')
 def delete(id):
-    if not id or id != 0:
-        entry = Entry.query.get(id)
-        if entry:
-            db.session.delete(entry)
-            db.session.commit()
-        return redirect('/')
-
-    return "of the jedi"
+    return redirect(url_for('confirm_delete_entry', id=id))
 
 @app.route('/entries/<int:id>/toggle', methods=['POST'])
 def toggle_entry(id):
